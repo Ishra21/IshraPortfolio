@@ -1,15 +1,16 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, Phone, Linkedin, Github, Send } from "lucide-react"
+import { Mail, Phone, Linkedin, Github, Send, Loader2 , CheckCircle} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/hooks/use-toast"
 import { useTheme } from "next-themes"
+import { useInView } from "react-intersection-observer"
+import { sendEmail } from "@/app/actions"
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -21,34 +22,71 @@ export default function Contact() {
   const { theme } = useTheme()
   const isDark = theme !== "light"
 
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  })
+
+  const [formStatus, setFormStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle")
+
+  const formRef = useRef<HTMLFormElement>(null)
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    toast({
-      title: "Message sent!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    })
-
-    setFormData({ name: "", email: "", message: "" })
-    setIsSubmitting(false)
-  }
-
+    e.preventDefault();
+  
+    if (formStatus === "loading") return;
+  
+    setFormStatus("loading");
+    setIsSubmitting(true);
+  
+    try {
+      // Convert formData to FormData
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("email", formData.email);
+      form.append("message", formData.message);
+      
+      const result = await sendEmail(form);
+  
+      if (result?.success) {
+        toast({
+          title: "Message sent successfully!",
+          description: "We'll get back to you as soon as possible.",
+        });
+  
+        setFormData({ name: "", email: "", message: "" });
+        setFormStatus("success");
+      } else {
+        throw new Error("Email failed");
+      }
+    } catch (error) {
+      console.error("Form error:", error);
+      toast({
+        title: "Error sending message",
+        description: "There was a problem. Please try again.",
+        variant: "destructive",
+      });
+      setFormStatus("error");
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => setFormStatus("idle"), 3000);
+    }
+  };
+  
   const contactInfo = [
     { icon: Mail, text: "ishra6107@gmail.com", href: "mailto:ishra6107@gmail.com" },
     { icon: Phone, text: "+91 9669552957", href: "tel:+919669552957" },
     { icon: Linkedin, text: "Ishra Khanam", href: "https://www.linkedin.com/in/ishra-khanam/" },
     { icon: Github, text: "Ishra", href: "https://github.com/ishra21" },
   ]
-
+  
   return (
     <div className="container mx-auto px-4">
       <motion.h2
@@ -127,7 +165,7 @@ export default function Contact() {
         >
           <h3 className={`text-2xl font-bold mb-6 ${isDark ? "text-white" : "text-purple-900"}`}>Send Me a Message</h3>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} ref={formRef}  className="space-y-6">
             <div>
               <label
                 htmlFor="name"
@@ -143,6 +181,7 @@ export default function Contact() {
                 required
                 className={`${isDark ? "bg-black/40 border-purple-500/30 focus:border-purple-500 text-white" : "bg-white border-purple-200 focus:border-purple-500 text-purple-900"}`}
                 placeholder="Name"
+                disabled={formStatus !== "idle"}
               />
             </div>
 
@@ -162,6 +201,7 @@ export default function Contact() {
                 required
                 className={`${isDark ? "bg-black/40 border-purple-500/30 focus:border-purple-500 text-white" : "bg-white border-purple-200 focus:border-purple-500 text-purple-900"}`}
                 placeholder="email"
+                disabled={formStatus !== "idle"}
               />
             </div>
 
@@ -180,10 +220,11 @@ export default function Contact() {
                 required
                 className={`${isDark ? "bg-black/40 border-purple-500/30 focus:border-purple-500 text-white" : "bg-white border-purple-200 focus:border-purple-500 text-purple-900"} min-h-[150px]`}
                 placeholder="Hello, I'd like to talk about..."
+                disabled={formStatus !== "idle"}
               />
             </div>
 
-            <Button
+            {/* <Button
               type="submit"
               disabled={isSubmitting}
               className={`w-full ${isDark ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700" : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"} text-white`}
@@ -218,7 +259,40 @@ export default function Contact() {
                   <Send className="ml-2 h-5 w-5" />
                 </span>
               )}
-            </Button>
+            </Button> */}
+
+<Button
+                type="submit"
+                className={`w-full flex items-center justify-center ${
+                  formStatus === "success"
+                    ? "bg-green-600 hover:bg-green-700"
+                    : formStatus === "error"
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-[#016B5F] hover:bg-[#015a50]"
+                } transition-colors duration-300`}
+                disabled={formStatus !== "idle"}
+              >
+                {formStatus === "loading" && (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <span>Sending...</span>
+                  </>
+                )}
+                {formStatus === "success" && (
+                  <>
+                    <CheckCircle className="mr-2 h-5 w-5" />
+                    <span>Message Sent!</span>
+                  </>
+                )}
+                {formStatus === "error" && <span>Try Again</span>}
+                {formStatus === "idle" && (
+                  <>
+                    <span>Send Message</span>
+                    <Send className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+
           </form>
         </motion.div>
       </div>

@@ -23,10 +23,10 @@ export default function Home() {
   const { theme } = useTheme()
   const isDark = theme !== "light"
 
-  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
+  const scrollToSection = (ref: { current: HTMLElement | null }) => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  
   return (
     <main
       className={`relative min-h-screen ${isDark ? "bg-black text-white" : "bg-white text-purple-900"} overflow-x-hidden`}

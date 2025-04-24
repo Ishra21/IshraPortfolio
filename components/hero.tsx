@@ -38,7 +38,7 @@ export default function Hero() {
           </h1>
         </motion.div>
 
-       <div className="text-3xl md:text-5xl font-bold min-h-[60px] text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-600">
+      <div className="text-3xl md:text-5xl font-bold min-h-[60px] text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-600">
   <TypeAnimation
     sequence={[
       "Ishra Khanam", 2000,
@@ -128,7 +128,7 @@ export default function Hero() {
             <ExternalLink className="ml-2 h-5 w-5 group-hover:translate-y-0.5 transition-transform" />
           </Button>
 
-          <Button
+        <Button
             onClick={scrollToContent}
             variant="outline"
             className={`px-6 py-6 rounded-full font-medium text-lg ${isDark ? "border-purple-500/50 text-purple-200 hover:bg-purple-500/20" : "border-purple-500 text-purple-700 hover:bg-purple-100"} group`}

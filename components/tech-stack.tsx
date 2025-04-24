@@ -1,7 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { FaReact, FaHtml5, FaNodeJs, FaJs } from "react-icons/fa"
+import { FaReact, FaJs, FaHtml5, FaNodeJs, FaCss3Alt, FaBootstrap } from "react-icons/fa";
+import { SiTailwindcss, SiRedux, SiExpress, SiPostman } from "react-icons/si";
 import { useTheme } from "next-themes"
 
 export default function TechStack() {
@@ -33,8 +34,14 @@ export default function TechStack() {
     { icon: FaReact, color: "#61DAFB", name: "React" },
     { icon: FaJs, color: "#F7DF1E", name: "JavaScript" },
     { icon: FaHtml5, color: "#E34F26", name: "HTML5" },
+    { icon: FaCss3Alt, color: "#264de4", name: "CSS3" },
     { icon: FaNodeJs, color: "#339933", name: "Node.js" },
-  ]
+    { icon: SiExpress, color: "#000000", name: "Express" },
+    { icon: SiRedux, color: "#764ABC", name: "Redux" },
+    { icon: SiTailwindcss, color: "#38BDF8", name: "Tailwind CSS" },
+    { icon: FaBootstrap, color: "#7952B3", name: "Bootstrap" },
+    { icon: SiPostman, color: "#FF6C37", name: "REST API" }, // Represented by Postman
+  ];
 
   return (
     <div className={`py-16 container mx-auto px-4 ${isDark ? "" : "bg-white"}`}>
