@@ -48,6 +48,36 @@ const projects: Project[] = [
     liveLink: "https://git-hub-user-search-tool.vercel.app/",
     githubLink: "https://github.com/Ishra21/GitHubUserSearch",
   },
+  {
+    id: 4,
+    title: "Influencer Hub",
+    description:
+      "Influencer Hub is a full stack platform with separate user and admin panels, secured using JWT authentication. Users can book influencers and post comments, while admins can manage all users, bookings, and feedback efficiently.",
+    image: "https://i.ibb.co/6RYsv7pD/Screenshot-2025-04-23-174001.png",
+    tags: ["React", "Redux", "Tailwind CSS", "Node.js", "Express.js", "MongoDB"],
+    liveLink: "https://influencer-hub-woad.vercel.app",
+    githubLink: "https://github.com/Ishra21/IshraPortfolio",
+  },
+    {
+    id: 5,
+    title: "Car Complaint",
+    description:
+      "Bike Complaint System is a full-stack web application developed using React.js, Tailwind CSS, Express.js, MongoDB, and JWT authentication. It enables users to securely register, log in, and submit complaints related to bike issues. The system features protected routes to ensure secure access, and it offers real-time updates for both users and administrators to streamline complaint management and resolution.",
+    image: "https://i.ibb.co/sp3bDKkk/image.png",
+    tags: ["React", "Redux", "Tailwind CSS", "Node.js", "Express.js", "MongoDB", "JWT"],
+    liveLink: "https://github.com/Ishra21/bike-complaint",
+    githubLink: "https://github.com/Ishra21/bike-complaint",
+  },
+  {
+    id: 6,
+    title: "Employee Management System",
+    description:
+      "Employee Management System is a full-stack web app built with React.js, Express.js, and MongoDB. It allows admins to securely manage employee records, including adding, editing, and deleting details, with role-based access and a user-friendly interface.",
+    image: "https://i.ibb.co/DFhqtDX/image.png",
+    tags: ["React", "Redux", "Tailwind CSS", "Node.js", "Express.js", "MongoDB", "JWT"],
+    liveLink: "https://github.com/Ishra21/Employee-Management-System",
+    githubLink: "https://github.com/Ishra21/Employee-Management-System",
+  },
 ]
 
 export default function Projects() {

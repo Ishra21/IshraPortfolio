@@ -3,14 +3,14 @@
 import type React from "react"
 import { useRef, useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, Phone, Linkedin, Github, Send, Loader2 , CheckCircle} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "@/hooks/use-toast"
+import { Mail, Phone, Linkedin, Github, Send, Loader2, CheckCircle, MessageCircle } from "lucide-react"
+import { Button } from "@/components/ui/button.jsx"
+import { Input } from "@/components/ui/input.jsx"
+import { Textarea } from "@/components/ui/textarea.jsx"
+import { toast } from "@/hooks/use-toast.js"
 import { useTheme } from "next-themes"
 import { useInView } from "react-intersection-observer"
-import { sendEmail } from "@/app/actions"
+import { sendEmail } from "@/app/actions.js"
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -18,20 +18,16 @@ export default function Contact() {
     email: "",
     message: "",
   })
-  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const { theme } = useTheme()
   const isDark = theme !== "light"
+  const formRef = useRef<HTMLFormElement>(null)
 
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
   })
-
-  const [formStatus, setFormStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle")
-
-  const formRef = useRef<HTMLFormElement>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -39,54 +35,55 @@ export default function Contact() {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
-    if (formStatus === "loading") return;
-  
-    setFormStatus("loading");
-    setIsSubmitting(true);
-  
+    e.preventDefault()
+    if (formStatus === "loading") return
+
+    setFormStatus("loading")
+
     try {
-      // Convert formData to FormData
-      const form = new FormData();
-      form.append("name", formData.name);
-      form.append("email", formData.email);
-      form.append("message", formData.message);
-      
-      const result = await sendEmail(form);
-  
+      const form = new FormData()
+      form.append("name", formData.name)
+      form.append("email", formData.email)
+      form.append("message", formData.message)
+
+      const result = await sendEmail(form)
+
       if (result?.success) {
         toast({
           title: "Message sent successfully!",
           description: "We'll get back to you as soon as possible.",
-        });
-  
-        setFormData({ name: "", email: "", message: "" });
-        setFormStatus("success");
+        })
+
+        setFormData({ name: "", email: "", message: "" })
+        setFormStatus("success")
       } else {
-        throw new Error("Email failed");
+        throw new Error("Email failed")
       }
     } catch (error) {
-      console.error("Form error:", error);
+      console.error("Form error:", error)
       toast({
         title: "Error sending message",
         description: "There was a problem. Please try again.",
         variant: "destructive",
-      });
-      setFormStatus("error");
+      })
+      setFormStatus("error")
     } finally {
-      setIsSubmitting(false);
-      setTimeout(() => setFormStatus("idle"), 3000);
+      setTimeout(() => setFormStatus("idle"), 3000)
     }
-  };
-  
+  }
+
   const contactInfo = [
     { icon: Mail, text: "ishra6107@gmail.com", href: "mailto:ishra6107@gmail.com" },
     { icon: Phone, text: "+91 9669552957", href: "tel:+919669552957" },
     { icon: Linkedin, text: "Ishra Khanam", href: "https://www.linkedin.com/in/ishra-khanam/" },
     { icon: Github, text: "Ishra", href: "https://github.com/ishra21" },
+    {
+      icon: MessageCircle,
+      text: "WhatsApp",
+      href: "https://wa.me/919669552957?text=Hi%20Ishra%2C%20I%20visited%20your%20portfolio!",
+    },
   ]
-  
+
   return (
     <div className="container mx-auto px-4">
       <motion.h2
@@ -110,6 +107,7 @@ export default function Contact() {
       </motion.p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        {/* Contact Information */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -157,6 +155,7 @@ export default function Contact() {
           </motion.div>
         </motion.div>
 
+        {/* Contact Form */}
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -165,12 +164,9 @@ export default function Contact() {
         >
           <h3 className={`text-2xl font-bold mb-6 ${isDark ? "text-white" : "text-purple-900"}`}>Send Me a Message</h3>
 
-          <form onSubmit={handleSubmit} ref={formRef}  className="space-y-6">
+          <form onSubmit={handleSubmit} ref={formRef} className="space-y-6">
             <div>
-              <label
-                htmlFor="name"
-                className={`block text-sm font-medium ${isDark ? "text-purple-200" : "text-purple-700"} mb-1`}
-              >
+              <label htmlFor="name" className={`block text-sm font-medium ${isDark ? "text-purple-200" : "text-purple-700"} mb-1`}>
                 Your Name
               </label>
               <Input
@@ -186,10 +182,7 @@ export default function Contact() {
             </div>
 
             <div>
-              <label
-                htmlFor="email"
-                className={`block text-sm font-medium ${isDark ? "text-purple-200" : "text-purple-700"} mb-1`}
-              >
+              <label htmlFor="email" className={`block text-sm font-medium ${isDark ? "text-purple-200" : "text-purple-700"} mb-1`}>
                 Your Email
               </label>
               <Input
@@ -200,16 +193,13 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 className={`${isDark ? "bg-black/40 border-purple-500/30 focus:border-purple-500 text-white" : "bg-white border-purple-200 focus:border-purple-500 text-purple-900"}`}
-                placeholder="email"
+                placeholder="Email"
                 disabled={formStatus !== "idle"}
               />
             </div>
 
             <div>
-              <label
-                htmlFor="message"
-                className={`block text-sm font-medium ${isDark ? "text-purple-200" : "text-purple-700"} mb-1`}
-              >
+              <label htmlFor="message" className={`block text-sm font-medium ${isDark ? "text-purple-200" : "text-purple-700"} mb-1`}>
                 Your Message
               </label>
               <Textarea
@@ -224,75 +214,38 @@ export default function Contact() {
               />
             </div>
 
-            {/* <Button
+            <Button
               type="submit"
-              disabled={isSubmitting}
-              className={`w-full ${isDark ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700" : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"} text-white`}
+              disabled={formStatus === "loading"}
+              className={`w-full flex items-center justify-center gap-2 ${isDark
+                ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"} text-white`}
             >
-              {isSubmitting ? (
-                <span className="flex items-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+              {formStatus === "loading" && (
+                <>
+                  <Loader2 className="animate-spin w-5 h-5" />
                   Sending...
-                </span>
-              ) : (
-                <span className="flex items-center">
-                  Send Message
-                  <Send className="ml-2 h-5 w-5" />
-                </span>
+                </>
               )}
-            </Button> */}
-
-<Button
-                type="submit"
-                className={`w-full flex items-center justify-center ${
-                  formStatus === "success"
-                    ? "bg-green-600 hover:bg-green-700"
-                    : formStatus === "error"
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-[#016B5F] hover:bg-[#015a50]"
-                } transition-colors duration-300`}
-                disabled={formStatus !== "idle"}
-              >
-                {formStatus === "loading" && (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    <span>Sending...</span>
-                  </>
-                )}
-                {formStatus === "success" && (
-                  <>
-                    <CheckCircle className="mr-2 h-5 w-5" />
-                    <span>Message Sent!</span>
-                  </>
-                )}
-                {formStatus === "error" && <span>Try Again</span>}
-                {formStatus === "idle" && (
-                  <>
-                    <span>Send Message</span>
-                    <Send className="ml-2 h-4 w-4" />
-                  </>
-                )}
-              </Button>
-
+              {formStatus === "success" && (
+                <>
+                  <CheckCircle className="w-5 h-5" />
+                  Sent!
+                </>
+              )}
+              {formStatus === "error" && (
+                <>
+                  <Send className="w-5 h-5" />
+                  Try Again
+                </>
+              )}
+              {formStatus === "idle" && (
+                <>
+                  <Send className="w-5 h-5" />
+                  Send Message
+                </>
+              )}
+            </Button>
           </form>
         </motion.div>
       </div>
