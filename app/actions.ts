@@ -25,7 +25,7 @@ export async function sendEmail(formData: FormData) {
     from: `"Ishra Khanam" <${process.env.EMAIL_USER}>`,
     to: "ishra6107@gmail.com",
     cc: "khanisha2921@gmail.com",
-    subject: `New Inquiry from ${name} - Ishra Khanam`,
+    subject: `New message from ${name} - Ishra Khanam`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px;">
         <h1 style="color: #016B5F;">New Contact Form Submission</h1>

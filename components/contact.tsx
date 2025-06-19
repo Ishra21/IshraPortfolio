@@ -83,7 +83,6 @@ export default function Contact() {
       href: "https://wa.me/919669552957?text=Hi%20Ishra%2C%20I%20visited%20your%20portfolio!",
     },
   ]
-
   return (
     <div className="container mx-auto px-4">
       <motion.h2
