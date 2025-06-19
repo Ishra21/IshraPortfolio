@@ -80,6 +80,7 @@ const projects: Project[] = [
   },
 ]
 
+
 export default function Projects() {
   const [hoveredProject, setHoveredProject] = useState<number | null>(null)
   const { theme } = useTheme()
